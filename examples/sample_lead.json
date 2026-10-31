@@ -1,0 +1,12 @@
+{
+  "full_name": "Ahmed Khan",
+  "email": "ahmed.khan@example.com",
+  "phone": "+923001234567",
+  "property_type": "Residential plot",
+  "budget": "PKR 1.5 crore",
+  "preferred_location": "Islamabad",
+  "buying_timeline": "within 7 days",
+  "message": "I want to arrange a site visit this week.",
+  "source": "website",
+  "secret": "replace-with-your-webhook-secret"
+}
