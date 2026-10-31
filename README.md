@@ -245,6 +245,10 @@ pytest -q
 
 This is a single-instance demonstration foundation, not an enterprise CRM. SQLite is suitable for low-volume, single-instance use. The due-follow-up endpoint lists tasks, but no background scheduler runs automatically. Buyer calls, emails, SMS, and WhatsApp messages are not implemented. Monday.com integration is create-only. These are future enhancements, not current features.
 
+## SEO and discoverability
+
+See [`docs/SEO.md`](docs/SEO.md) for the Techtox GitHub repository description, recommended GitHub topics, target search phrases, website title and meta description, service-page structure, and technical SEO checklist.
+
 ## About Techtox
 
 **Techtox** is an AI automation agency focused on building useful business systems rather than unnecessary software. The Techtox automation service portfolio includes lead capture and CRM automation, appointment and follow-up workflows, and AI-assisted customer support. This GitHub repository documents the technical foundation of the **Techtox Lead & CRM Automation** service.
