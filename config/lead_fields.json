@@ -1,0 +1,15 @@
+{
+  "required": ["full_name"],
+  "contact_requirement": "at_least_one_valid_email_or_phone",
+  "fields": {
+    "full_name": {"type": "string", "label": "Full Name"},
+    "email": {"type": "email", "label": "Email"},
+    "phone": {"type": "phone", "label": "Phone"},
+    "property_type": {"type": "string", "label": "Property Type"},
+    "budget": {"type": "string_or_number", "label": "Budget"},
+    "preferred_location": {"type": "string", "label": "Preferred Location"},
+    "buying_timeline": {"type": "string", "label": "Buying Timeline"},
+    "message": {"type": "string", "label": "Message"},
+    "source": {"type": "string", "label": "Lead Source"}
+  }
+}
