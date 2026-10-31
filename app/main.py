@@ -4,7 +4,7 @@ from fastapi import FastAPI, Header, HTTPException, Query
 from app.config import get_settings
 from app.database import init_db, connect
 from app.schemas import LeadIn, LeadResult
-from app.services import save_lead
+from app.services import save_lead, now_local
 from app.integrations import monday_sync, notify_team
 
 @asynccontextmanager
@@ -64,7 +64,7 @@ def due_followups():
         rows=db.execute("""SELECT t.*,l.full_name,l.email,l.phone,l.priority,l.assigned_to
           FROM follow_up_tasks t JOIN leads l ON l.id=t.lead_id
           WHERE t.status='Open' AND t.due_at<=? ORDER BY t.due_at""",
-          (__import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),)).fetchall()
+          (now_local().isoformat(),)).fetchall()
     return [dict(r) for r in rows]
 
 @app.get("/api/stats")
