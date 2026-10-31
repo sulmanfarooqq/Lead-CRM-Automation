@@ -1,0 +1,10 @@
+{
+  "strategy": "round_robin",
+  "timezone": "Asia/Karachi",
+  "default_owner": "Unassigned",
+  "sales_reps": [
+    {"id": "rep_1", "name": "Sales Representative 1", "email": "sales1@example.com", "active": true},
+    {"id": "rep_2", "name": "Sales Representative 2", "email": "sales2@example.com", "active": true}
+  ],
+  "priority_rules": {"urgent_max_days": 7, "high_max_days": 30, "urgent_followup_hours": 1, "high_followup_hours": 24, "nurture_followup_days": 3, "review_followup_days": 1}
+}
