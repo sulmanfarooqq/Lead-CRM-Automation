@@ -47,15 +47,14 @@ def classify_lead(data):
     else: priority, delta = "Nurture", timedelta(days=p["nurture_followup_days"])
     return priority, reasons, now_local() + delta
 
-def assign_rep():
+def assign_rep(db):
     rules = json.loads((ROOT / "config/routing_rules.json").read_text())
     reps = [r for r in rules["sales_reps"] if r.get("active")]
     if not reps: return rules.get("default_owner","Unassigned"), ""
-    with connect() as db:
-        row = db.execute("SELECT value FROM settings WHERE key='round_robin_index'").fetchone()
-        index = int(row["value"]) if row else 0
-        rep = reps[index % len(reps)]
-        db.execute("UPDATE settings SET value=? WHERE key='round_robin_index'",(str(index+1),))
+    row = db.execute("SELECT value FROM settings WHERE key='round_robin_index'").fetchone()
+    index = int(row["value"]) if row else 0
+    rep = reps[index % len(reps)]
+    db.execute("UPDATE settings SET value=? WHERE key='round_robin_index'",(str(index+1),))
     return rep["name"], rep.get("email","")
 
 def save_lead(data):
@@ -76,7 +75,7 @@ def save_lead(data):
              data.get("preferred_location"),data.get("buying_timeline"),data.get("message"),data.get("source","website"),
              priority,due.isoformat(),json.dumps(reasons),now,json.dumps(data),lead_id))
         else:
-            owner, owner_email = assign_rep()
+            owner, owner_email = assign_rep(db)
             cur = db.execute("""INSERT INTO leads(full_name,email,phone,property_type,budget_raw,preferred_location,
             buying_timeline,message,source,priority,assigned_to,assigned_email,follow_up_due,review_reasons,
             created_at,updated_at,raw_payload) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
