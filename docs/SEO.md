@@ -1,145 +1,71 @@
-# SEO Plan — Techtox Lead & CRM Automation
+# SEO and discoverability plan
 
-This document defines how to describe and promote this project consistently across GitHub, search engines, and the Techtox website.
+How to make this repository and the matching Techtox service page easy to find, without claiming anything the code does not do.
 
-## 1. Primary search intent
+## 1. GitHub repository settings (set these manually)
 
-This repository is a Python/FastAPI lead-management automation backend. Its strongest, accurate search themes are:
+GitHub's search weighs the repository name, description, topics and README. The *About* box and topics can only be edited on github.com (repository page → gear icon next to **About**).
 
-| Priority | Keyword phrase | Where to use it |
+**Description** (paste as is, under GitHub's 350-character limit):
+
+```text
+Real estate lead automation: capture Google Form and website leads, validate and qualify them, remove duplicates, route to sales reps, sync to monday.com and alert the team. Python FastAPI service plus an importable n8n workflow.
+```
+
+**Website:** your Techtox service page, or the demo video once it exists.
+
+**Topics** (GitHub allows 20; these 18 all describe real features):
+
+```text
+python fastapi n8n n8n-workflow monday-com crm crm-automation lead-management
+lead-generation lead-routing real-estate real-estate-automation sales-automation
+google-forms webhook workflow-automation sqlite automation
+```
+
+**Social preview image:** Settings → General → Social preview. A 1280×640 image of the flow diagram or the monday.com board makes shared links stand out.
+
+**Pin** the repository on your GitHub profile, and consider a short release (`v1.1.0`) so it shows under *Releases*.
+
+## 2. What the README already does for search
+
+- The H1 and first paragraph contain the phrases people search for: *real estate lead automation*, *lead & CRM automation*, *monday.com*, *n8n*, *FastAPI*.
+- A comparison table makes it clear that both a Python service and an n8n workflow are included, which matches two different search audiences.
+- Headings are descriptive and the table of contents links to them, which GitHub renders as page anchors.
+- Honest limitations are included. This builds trust with clients and reviewers, and avoids claims that cannot be defended.
+
+## 3. Target phrases
+
+| Priority | Phrase | Where it appears |
 |---|---|---|
-| Primary | lead management automation | README title, opening description, service page |
-| Primary | CRM automation | README, project description, Techtox service page |
-| Primary | Python lead management system | README and technical documentation |
-| Secondary | real estate lead automation | Use-case section and Techtox service page |
-| Secondary | lead capture webhook | Technical description and API documentation |
-| Secondary | automated lead routing | Workflow and feature descriptions |
-| Secondary | sales lead follow-up automation | Service page and demo video description |
-| Secondary | FastAPI CRM integration | Technology and implementation documentation |
-| Secondary | Monday.com CRM integration | Integration documentation |
-| Secondary | lead qualification system | Feature description and workflow explanation |
+| Primary | real estate lead automation | README H1, description, topics |
+| Primary | lead management automation / CRM automation | README, description |
+| Primary | n8n lead workflow, n8n monday.com | README, N8N_WORKFLOW.md |
+| Secondary | Google Form to CRM, Google Forms webhook | GOOGLE_FORM_SETUP.md |
+| Secondary | FastAPI lead capture webhook | README, API reference |
+| Secondary | lead routing round robin, lead qualification | README, WORKFLOW.md |
 
-Use related phrases naturally where they accurately describe the code. Do not add unrelated keywords such as AI chatbot, voice agent, WhatsApp automation, or email marketing automation as if this repository implemented them.
+Use phrases only where they are true. Do not add keywords for features that are absent (AI chatbot, WhatsApp automation, voice agent, SMS follow-up).
 
-## 2. Suggested GitHub repository metadata
+## 4. Techtox website service page
 
-Set these fields manually in the repository's **About** section on GitHub.
+A GitHub README is a technical asset, not an agency landing page. For client enquiries publish a page such as `/services/lead-crm-automation` on the Techtox site.
 
-**Suggested description (copy exactly):**
+- **Title:** `Lead & CRM Automation for Real Estate Teams | Techtox`
+- **Meta description:** `Techtox builds lead and CRM automation for real estate teams: capture website and Google Form enquiries, qualify and route leads, and organise follow-ups in monday.com.`
+- **H1:** `Lead & CRM Automation for Real Estate Teams`
+- **Structure:** the problem → how it works (capture, validate, qualify, assign, track, notify) → features → integrations that are actually tested → a real demo video → implementation process → FAQs (data handling, what happens when the CRM is down) → call to action.
+- Link to this repository and to the demo video, and link back from the README.
 
-```text
-Python lead management and CRM automation system by Techtox. Capture website leads, validate and qualify inquiries, detect duplicates, route sales reps, and create follow-up tasks with FastAPI.
-```
+Technical checklist: unique title and description per page, one H1, descriptive URLs, HTTPS, mobile-friendly, alt text on screenshots, canonical URL, XML sitemap submitted in Google Search Console, no `meta keywords` (Google ignores it), and structured data only where it accurately describes the page.
 
-**Suggested topics:**
+## 5. Build credibility honestly
 
-```text
-python
-fastapi
-crm-automation
-lead-management
-lead-generation
-lead-capture
-lead-routing
-sales-automation
-real-estate-automation
-monday-com
-slack-webhook
-sqlite
-```
+- Record the demo ([VIDEO_DEMO_SCRIPT.md](VIDEO_DEMO_SCRIPT.md)), publish it on YouTube, and link it in the README and the website.
+- Share what you learned (for example, the parity test that runs the n8n code in Node) as a short post linking to the repository.
+- Ask real clients for real references. Do not buy links or write testimonials.
 
-Keep topics relevant to the actual code. GitHub topics help classify repositories and make related projects discoverable.
+## 6. Accuracy rules for all marketing
 
-## 3. Techtox website landing page SEO
+This project currently provides: webhook capture, validation, duplicate detection (local and in monday.com), rule-based classification, round-robin routing, monday.com sync with notes and tasks, internal email/Slack alerts, failure alerts and resync, and a protected management API.
 
-The GitHub repository is a technical portfolio asset. To attract potential customers from Google, publish a dedicated, indexable service page on the official Techtox website. Do not rely on the repository README as the agency's only landing page.
-
-**Suggested page URL:**
-
-```text
-/services/lead-crm-automation
-```
-
-**Suggested page title:**
-
-```text
-Lead & CRM Automation for Real Estate Teams | Techtox
-```
-
-**Suggested meta description:**
-
-```text
-Techtox builds lead and CRM automation for real estate teams. Capture website inquiries, qualify leads, route them to sales reps, and organize follow-ups.
-```
-
-**Suggested H1:**
-
-```text
-Lead & CRM Automation for Real Estate Teams
-```
-
-**Suggested opening copy:**
-
-```text
-Techtox builds lead management automation systems that help real estate teams handle new inquiries consistently. Capture leads from website forms, validate contact details, identify priority inquiries, assign leads to the right sales representative, and organize follow-up tasks in your CRM workflow.
-```
-
-The service page must explain the actual service, supported integrations, setup process, limitations, and how a prospect can book a consultation. Add screenshots or a genuine walkthrough video of the working demo. Do not claim guaranteed conversion increases or features that have not been built.
-
-## 4. Recommended service-page structure
-
-1. H1: Lead & CRM Automation for Real Estate Teams
-2. The problem: delayed replies, unassigned inquiries, scattered lead records, and missed follow-ups.
-3. How the Techtox system works: capture → validate → qualify → assign → track → notify.
-4. Features: lead capture, duplicate checks, qualification, sales routing, CRM sync, and internal notifications.
-5. Integrations: list only integrations that are currently supported and tested.
-6. A real demo: show a sample inquiry moving through the workflow.
-7. Implementation process: discovery, workflow mapping, configuration, testing, handover, and support.
-8. FAQs: CRM compatibility, data handling, setup requirements, and what happens when an integration fails.
-9. CTA: book a meeting with Techtox.
-
-Create separate pages only when there is enough genuinely useful, distinct content. Do not publish near-identical pages targeting tiny keyword variations.
-
-## 5. Technical SEO checklist for the Techtox website
-
-- Give every important page a unique, descriptive HTML `<title>` and meta description.
-- Use one clear visible H1 that accurately describes the page.
-- Use descriptive URLs and meaningful internal link text.
-- Ensure the page works on mobile and loads reliably over HTTPS.
-- Add descriptive alt text to meaningful screenshots and diagrams.
-- Use canonical URLs where duplicate or alternate URLs exist.
-- Create an XML sitemap containing canonical, indexable pages and submit it in Google Search Console.
-- Make sure `robots.txt` does not accidentally block important pages.
-- Add Open Graph metadata for clean sharing previews.
-- Add relevant structured data only when it accurately describes the business or page; validate it before publishing.
-- Link the service page to related Techtox services, the contact/booking page, and the project demo.
-- Add the page to Google Search Console and monitor indexing, queries, impressions, clicks, and technical issues.
-
-Do not add a `meta keywords` tag for Google. Google says it does not use that tag for ranking. Repeating keywords unnaturally is keyword stuffing, not SEO.
-
-## 6. Build credibility and discovery
-
-- Publish a real project walkthrough on the Techtox website and YouTube.
-- Link the demo video back to the matching Techtox service page.
-- Link the GitHub repository from the service page as technical project documentation.
-- Share useful implementation notes on relevant professional channels, with a link to the detailed project page.
-- Ask collaborators or clients for relevant, genuine references when appropriate; do not buy links or create fake testimonials.
-- Keep screenshots, setup instructions, integrations, and limitations current.
-
-## 7. Measure results
-
-Use Google Search Console to monitor the Techtox domain, not just GitHub. Track:
-
-- Whether the service page is indexed.
-- Search queries that produce impressions.
-- Click-through rate for the page's search result.
-- Organic clicks to the service page.
-- Qualified enquiries and booked meetings originating from organic search.
-
-SEO is an ongoing process. Rankings and indexing are not guaranteed, and changes can take time to be reflected in search results.
-
-## 8. Accuracy rules for Techtox marketing
-
-This repository currently supports local duplicate detection, lead qualification, round-robin assignment, SQLite persistence, optional Monday.com item creation, and optional internal Slack/SMTP notifications.
-
-It currently does not provide an automatic background follow-up scheduler, buyer-facing email/SMS/WhatsApp messaging, remote Monday.com duplicate lookup/update, or multi-instance PostgreSQL deployment. Do not claim these as available features on GitHub, the Techtox website, proposals, or demo videos until they are implemented and tested.
+It does **not** provide: buyer-facing email, SMS or WhatsApp; automatic overdue-task reminders; multi-instance or PostgreSQL deployment; AI-based qualification; or a verified live monday.com integration until you have run the check in [MONDAY_SETUP.md](MONDAY_SETUP.md#verify-with-a-real-lead). Do not claim these on GitHub, the website, proposals or videos. Rankings and indexing are never guaranteed and take time.

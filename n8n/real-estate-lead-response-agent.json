@@ -1,0 +1,893 @@
+{
+  "name": "Real Estate Lead Response Agent",
+  "nodes": [
+    {
+      "id": "1b254516-538a-42f7-bcac-07266a432e4f",
+      "name": "Google Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "real-estate-lead",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "webhookId": "cbfd2070-71c7-4a17-9b32-f73a51e26964"
+    },
+    {
+      "id": "95fc6360-608a-413f-9dad-8aa68c9fd9a0",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e3c487e0-ccfb-4945-b46c-e772d88a664e",
+              "name": "mondayAccountUrl",
+              "type": "string",
+              "value": "https://YOUR-ACCOUNT.monday.com"
+            },
+            {
+              "id": "e7a5fedb-69e9-4269-8fc1-548f6a888350",
+              "name": "boardId",
+              "type": "string",
+              "value": "REPLACE_LEADS_BOARD_ID"
+            },
+            {
+              "id": "da587d3f-2f7c-4bb4-955a-b8d0bffb6ef4",
+              "name": "groupId",
+              "type": "string",
+              "value": "topics"
+            },
+            {
+              "id": "8fd2cd17-ba42-4f2b-ac4c-47eb25e1af8d",
+              "name": "colEmail",
+              "type": "string",
+              "value": "REPLACE_EMAIL_COLUMN_ID"
+            },
+            {
+              "id": "cdb4eb2a-9500-41fe-a1eb-ca6d31c6df90",
+              "name": "colPhone",
+              "type": "string",
+              "value": "REPLACE_PHONE_COLUMN_ID"
+            },
+            {
+              "id": "277efe58-90fa-4268-9869-78cd3abcc1c1",
+              "name": "colPropertyType",
+              "type": "string",
+              "value": "REPLACE_PROPERTY_TYPE_COLUMN_ID"
+            },
+            {
+              "id": "a0bde861-f008-4920-b79b-d9f1125e991d",
+              "name": "colBudget",
+              "type": "string",
+              "value": "REPLACE_BUDGET_COLUMN_ID"
+            },
+            {
+              "id": "be9bfbf6-7b1b-4c49-8e21-9fbb639480bd",
+              "name": "colLocation",
+              "type": "string",
+              "value": "REPLACE_LOCATION_COLUMN_ID"
+            },
+            {
+              "id": "c02b1af3-2e01-4d6e-b425-6db7acc51ae5",
+              "name": "colTimeline",
+              "type": "string",
+              "value": "REPLACE_TIMELINE_COLUMN_ID"
+            },
+            {
+              "id": "6a038c62-bf29-4f10-b1a0-2240914027fd",
+              "name": "colMessage",
+              "type": "string",
+              "value": "REPLACE_MESSAGE_COLUMN_ID"
+            },
+            {
+              "id": "3cfd5ed0-4a8c-4929-9690-8bbb144e65b3",
+              "name": "colStage",
+              "type": "string",
+              "value": "REPLACE_STAGE_STATUS_COLUMN_ID"
+            },
+            {
+              "id": "dd453fb3-aeb0-4d55-b334-8b95a504bfb9",
+              "name": "colPriority",
+              "type": "string",
+              "value": "REPLACE_PRIORITY_STATUS_COLUMN_ID"
+            },
+            {
+              "id": "460cac65-324a-4cb0-bd2f-85ae22fa1072",
+              "name": "colFollowUpDue",
+              "type": "string",
+              "value": "REPLACE_FOLLOWUP_DATE_COLUMN_ID"
+            },
+            {
+              "id": "391fd86e-0d05-40c6-87c1-8ca0c504bc5f",
+              "name": "colOwner",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "b4da489e-6a8a-419b-b0d3-32c0b5e9b5b7",
+              "name": "salesRepMondayUserId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "567aa31c-c135-4aac-95c8-6bc3dc28442f",
+              "name": "taskBoardId",
+              "type": "string",
+              "value": "REPLACE_TASKS_BOARD_ID"
+            },
+            {
+              "id": "d83d03ab-9795-4a95-ab9a-230117765c5c",
+              "name": "taskGroupId",
+              "type": "string",
+              "value": "topics"
+            },
+            {
+              "id": "c127d9e4-416a-4309-a11d-bf658b95d539",
+              "name": "taskDueColumnId",
+              "type": "string",
+              "value": "REPLACE_TASK_DUE_DATE_COLUMN_ID"
+            },
+            {
+              "id": "9cebe73e-6817-48d2-9a7e-564dc18f0148",
+              "name": "taskNotesColumnId",
+              "type": "string",
+              "value": "REPLACE_TASK_NOTES_TEXT_COLUMN_ID"
+            },
+            {
+              "id": "98bd2d73-b04b-435b-8bca-3e00e3c65bb3",
+              "name": "salesRepEmail",
+              "type": "string",
+              "value": "sales.rep@example.com"
+            },
+            {
+              "id": "38510baf-a9e0-42ac-80e0-95712a9407ca",
+              "name": "adminEmail",
+              "type": "string",
+              "value": "you@example.com"
+            },
+            {
+              "id": "e9436b0f-c526-4c01-bdb8-33893f3bc13f",
+              "name": "defaultCountryCode",
+              "type": "string",
+              "value": "+92"
+            },
+            {
+              "id": "c844aeea-6433-4a94-b440-0bdb73ccd2bf",
+              "name": "webhookSecret",
+              "type": "string",
+              "value": "change-me-to-a-long-random-string"
+            },
+            {
+              "id": "7e199318-89dd-4e85-8471-d94e5576c5d8",
+              "name": "timezone",
+              "type": "string",
+              "value": "Asia/Karachi"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "e94dae4c-c0eb-41a5-a881-2cf210e57920",
+      "name": "Normalize & Validate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ],
+      "parameters": {
+        "jsCode": "  const cfg = $('Config').first().json;\n  const item = $input.first().json;\n  const b = item.body || item;\n  const pick = (...keys) => {\n    for (const k of keys) {\n      const v = b[k];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();\n    }\n    return '';\n  };\n\n  const fullName = pick('fullName', 'Full Name').replace(/\\s+/g, ' ');\n  const rawEmail = pick('email', 'Email').toLowerCase();\n  const rawPhone = pick('phone', 'Phone');\n  const propertyType = pick('propertyType', 'Property Type');\n  const budgetRaw = pick('budget', 'Budget');\n  const location = pick('preferredLocation', 'Preferred Location');\n  const timeline = pick('buyingTimeline', 'Buying Timeline');\n  const message = pick('message', 'Message');\n  const submittedAt = pick('submittedAt', 'Timestamp') || new Date().toISOString();\n\n  // Email\n  const emailValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(rawEmail);\n\n  // Phone -> E.164\n  const cc = cfg.defaultCountryCode || '+92';\n  const ccDigits = cc.replace('+', '');\n  const normPhone = (raw) => {\n    if (!raw) return '';\n    let s = raw.replace(/[^\\d+]/g, '');\n    if (s.startsWith('00')) s = '+' + s.slice(2);\n    if (!s.startsWith('+')) {\n      if (s.startsWith('0')) s = cc + s.slice(1);\n      else if (s.startsWith(ccDigits) && s.length >= ccDigits.length + 9) s = '+' + s;\n      else s = cc + s;\n    }\n    s = '+' + s.replace(/\\+/g, '');\n    return /^\\+[1-9]\\d{9,14}$/.test(s) ? s : '';\n  };\n  const phone = normPhone(rawPhone);\n  const phoneValid = phone !== '';\n\n  // Budget -> number (understands k, m, lakh, crore)\n  const parseBudget = (raw) => {\n    if (!raw) return null;\n    const s = raw.toLowerCase().replace(/,/g, '').replace(/(pkr|rs\\.?|usd|aed|\\$|£|€)/g, '').trim();\n    const m = s.match(/(\\d+(?:\\.\\d+)?)\\s*(crore|cr|lakh|lac|million|mil|m|thousand|k)?\\b/);\n    if (!m) return null;\n    const mult = { crore: 1e7, cr: 1e7, lakh: 1e5, lac: 1e5, million: 1e6, mil: 1e6, m: 1e6, thousand: 1e3, k: 1e3 };\n    const n = parseFloat(m[1]) * (m[2] ? mult[m[2]] : 1);\n    return n > 0 ? Math.round(n) : null;\n  };\n  const budget = parseBudget(budgetRaw);\n\n  // Validation\n  const authOk = !cfg.webhookSecret || b.secret === cfg.webhookSecret;\n  const flags = [];\n  if (!fullName) flags.push('Missing name');\n  if (!rawEmail) flags.push('Missing email');\n  else if (!emailValid) flags.push('Invalid email format');\n  if (!rawPhone) flags.push('Missing phone');\n  else if (!phoneValid) flags.push('Invalid phone number');\n\n  let rejectReason = '';\n  if (!authOk) rejectReason = 'Invalid webhook secret';\n  else if (!emailValid && !phoneValid) rejectReason = 'No valid email or phone number';\n\n  const raw = { ...b };\n  delete raw.secret;\n\n  return [{\n    json: {\n      fullName: fullName || 'Unknown lead',\n      email: emailValid ? rawEmail : '',\n      phone: phoneValid ? phone : '',\n      rawEmail,\n      rawPhone,\n      propertyType,\n      budgetRaw,\n      budget,\n      location,\n      timeline,\n      message,\n      submittedAt,\n      flags,\n      authOk,\n      isRejected: rejectReason !== '',\n      rejectReason,\n      dedupeColumnId: emailValid ? cfg.colEmail : cfg.colPhone,\n      dedupeValue: emailValid ? rawEmail : phone,\n      raw,\n    },\n  }];"
+      }
+    },
+    {
+      "id": "3f82b391-3145-4b8c-9593-6504f7f59bc3",
+      "name": "Is Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        300
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "bbb6dcbe-c362-49ba-94f4-897d7e6dd5f7",
+              "leftValue": "={{ $json.isRejected }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f9ad4c41-4c70-485d-9284-c7434de9f114",
+      "name": "Classify Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        200
+      ],
+      "parameters": {
+        "jsCode": "  const cfg = $('Config').first().json;\n  const l = $input.first().json;\n  const tz = cfg.timezone || 'Asia/Karachi';\n  const reasons = [...(l.flags || [])];\n\n  const urgentWords = /(immediate|asap|right away|urgent|today|tomorrow|this week)/;\n  const undecidedWords = /(undecided|not sure|unsure|just looking|browsing|don't know|dont know|no idea|exploring|flexible)/;\n  const tl = (l.timeline || '').toLowerCase();\n  const msg = (l.message || '').toLowerCase();\n\n  let days = null;\n  let undecided = false;\n  if (!tl) {\n    reasons.push('Missing buying timeline');\n  } else if (undecidedWords.test(tl)) {\n    undecided = true;\n  } else if (urgentWords.test(tl)) {\n    days = 7;\n  } else {\n    const m = tl.match(/(\\d+)(?:\\s*-\\s*(\\d+))?\\s*\\+?\\s*(day|week|month|year)/);\n    if (m) {\n      const unit = { day: 1, week: 7, month: 30, year: 365 }[m[3]];\n      days = Number(m[2] || m[1]) * unit; // ranges use the upper bound\n    } else {\n      reasons.push('Unrecognised buying timeline: ' + l.timeline);\n    }\n  }\n\n  if (!l.budget) reasons.push(l.budgetRaw ? 'Unreadable budget: ' + l.budgetRaw : 'Missing budget');\n  if ((undecided || (days !== null && days > 30)) && urgentWords.test(msg)) {\n    reasons.push('Contradiction: timeline is \"' + l.timeline + '\" but the message sounds urgent');\n  }\n  if (days !== null && days <= 7 && /(just looking|only looking|browsing)/.test(msg)) {\n    reasons.push('Contradiction: urgent timeline but the message says just browsing');\n  }\n\n  let priority;\n  if (reasons.length) priority = 'Needs review';\n  else if (undecided) priority = 'Nurture';\n  else if (days <= 7) priority = 'Urgent';\n  else if (days <= 30) priority = 'High priority';\n  else priority = 'Nurture';\n\n  const plan = {\n    'Urgent': { action: 'Call the buyer within 1 hour, then confirm by email', dueDays: 0 },\n    'High priority': { action: 'Call within 24 hours and propose viewing slots', dueDays: 1 },\n    'Nurture': { action: 'Send property information within 3 days and add to the nurture list', dueDays: 3 },\n    'Needs review': { action: 'Verify the missing or conflicting details, then re-classify', dueDays: 1 },\n  }[priority];\n  const followUpDue = $now.setZone(tz).plus({ days: plan.dueDays }).toFormat('yyyy-MM-dd');\n\n  // monday.com column values (only send what we have)\n  const cv = {};\n  if (l.email) cv[cfg.colEmail] = { email: l.email, text: l.email };\n  if (l.phone) cv[cfg.colPhone] = l.phone;\n  if (l.propertyType) cv[cfg.colPropertyType] = l.propertyType;\n  if (l.budget) cv[cfg.colBudget] = String(l.budget);\n  if (l.location) cv[cfg.colLocation] = l.location;\n  if (l.timeline) cv[cfg.colTimeline] = l.timeline;\n  if (l.message) cv[cfg.colMessage] = { text: l.message };\n  cv[cfg.colPriority] = { label: priority };\n  cv[cfg.colFollowUpDue] = { date: followUpDue };\n  if (cfg.salesRepMondayUserId && cfg.colOwner) {\n    cv[cfg.colOwner] = { personsAndTeams: [{ id: Number(cfg.salesRepMondayUserId), kind: 'person' }] };\n  }\n  const createCV = { ...cv, [cfg.colStage]: { label: 'New' } }; // stage only set on creation\n  const updateCV = cv;\n\n  const lookupBody = JSON.stringify({\n    query: 'query ($boardId: ID!, $col: String!, $val: String!) { items_page_by_column_values(board_id: $boardId, limit: 1, columns: [{column_id: $col, column_values: [$val]}]) { items { id name } } }',\n    variables: { boardId: String(cfg.boardId), col: l.dedupeColumnId, val: l.dedupeValue },\n  });\n  const createBody = JSON.stringify({\n    query: 'mutation ($boardId: ID!, $groupId: String, $name: String!, $cv: JSON!) { create_item(board_id: $boardId, group_id: $groupId, item_name: $name, column_values: $cv, create_labels_if_missing: true) { id } }',\n    variables: { boardId: String(cfg.boardId), groupId: cfg.groupId || null, name: l.fullName, cv: JSON.stringify(createCV) },\n  });\n\n  return [{\n    json: {\n      ...l,\n      priority,\n      followUpAction: plan.action,\n      followUpDue,\n      reviewReasons: reasons,\n      timelineDays: days,\n      updateColumnValues: JSON.stringify(updateCV),\n      lookupBody,\n      createBody,\n    },\n  }];"
+      }
+    },
+    {
+      "id": "7fbf51a1-ac65-4cc8-9650-b5a20129cc52",
+      "name": "Find Existing Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.monday.com/v2",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.lookupBody }}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "monday.com API Token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "5e25c22d-c6bc-4298-955d-06af4ba8f344",
+      "name": "Parse Lookup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        200
+      ],
+      "parameters": {
+        "jsCode": "  const cfg = $('Config').first().json;\n  const r = $input.first().json;\n  if (r.error_message || (r.errors && r.errors.length) || !r.data) {\n    throw new Error('monday.com lookup failed: ' + JSON.stringify(r.errors || r.error_message || r).slice(0, 400));\n  }\n  const l = $('Classify Lead').first().json;\n  const items = (r.data.items_page_by_column_values && r.data.items_page_by_column_values.items) || [];\n  const existingItemId = items.length ? items[0].id : null;\n  const out = { ...l, hasExisting: !!existingItemId, existingItemId };\n  if (existingItemId) {\n    out.updateBody = JSON.stringify({\n      query: 'mutation ($boardId: ID!, $itemId: ID!, $cv: JSON!) { change_multiple_column_values(board_id: $boardId, item_id: $itemId, column_values: $cv, create_labels_if_missing: true) { id } }',\n      variables: { boardId: String(cfg.boardId), itemId: String(existingItemId), cv: l.updateColumnValues },\n    });\n  }\n  return [{ json: out }];"
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "6ad397e7-513f-4c09-a8dc-3ee4fe1275c1",
+      "name": "Lead Exists?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        200
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c3885fea-049e-40a2-bf0b-1074aa424d4b",
+              "leftValue": "={{ $json.hasExisting }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "829602b5-ccf9-43ac-9636-c7ee05c72ba0",
+      "name": "Update Existing Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.monday.com/v2",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.updateBody }}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "monday.com API Token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "901c5dcf-5ed9-4a4b-9a01-faceb1a42da8",
+      "name": "Create New Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.monday.com/v2",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('Classify Lead').first().json.createBody }}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "monday.com API Token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "fd577b63-a7a2-4807-900b-ac3c5e4c519d",
+      "name": "Resolve Lead ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        200
+      ],
+      "parameters": {
+        "jsCode": "  const cfg = $('Config').first().json;\n  const r = $input.first().json;\n  if (r.error_message || (r.errors && r.errors.length) || !r.data) {\n    throw new Error('monday.com create/update failed: ' + JSON.stringify(r.errors || r.error_message || r).slice(0, 400));\n  }\n  const d = $('Parse Lookup').first().json;\n  const isDuplicate = !!r.data.change_multiple_column_values;\n  const itemId = (r.data.change_multiple_column_values || r.data.create_item).id;\n  const leadUrl = cfg.mondayAccountUrl.replace(/\\/+$/, '') + '/boards/' + cfg.boardId + '/pulses/' + itemId;\n  const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n  const money = d.budget ? d.budget.toLocaleString('en-US') : '—';\n\n  const logHtml = [\n    '<b>' + (isDuplicate ? 'Repeat enquiry' : 'New enquiry') + ' received via Google Form</b>',\n    'Priority: ' + esc(d.priority),\n    'Follow-up: ' + esc(d.followUpAction) + ' (due ' + d.followUpDue + ')',\n    'Budget: ' + money + ' | Timeline: ' + esc(d.timeline || '—') + ' | Location: ' + esc(d.location || '—'),\n    'Property type: ' + esc(d.propertyType || '—'),\n    'Message: ' + esc(d.message || '—'),\n    d.reviewReasons.length ? 'Review flags: ' + esc(d.reviewReasons.join('; ')) : 'Review flags: none',\n  ].join('<br>');\n\n  const logBody = JSON.stringify({\n    query: 'mutation ($itemId: ID!, $body: String!) { create_update(item_id: $itemId, body: $body) { id } }',\n    variables: { itemId: String(itemId), body: logHtml },\n  });\n\n  const taskCV = {};\n  if (cfg.taskDueColumnId) taskCV[cfg.taskDueColumnId] = { date: d.followUpDue };\n  if (cfg.taskNotesColumnId) taskCV[cfg.taskNotesColumnId] = d.followUpAction + ' | Lead: ' + leadUrl;\n  const taskBody = JSON.stringify({\n    query: 'mutation ($boardId: ID!, $groupId: String, $name: String!, $cv: JSON!) { create_item(board_id: $boardId, group_id: $groupId, item_name: $name, column_values: $cv, create_labels_if_missing: true) { id } }',\n    variables: {\n      boardId: String(cfg.taskBoardId),\n      groupId: cfg.taskGroupId || null,\n      name: 'Follow up (' + d.priority + '): ' + d.fullName,\n      cv: JSON.stringify(taskCV),\n    },\n  });\n\n  const rows = [\n    ['Name', d.fullName], ['Priority', d.priority], ['Follow-up action', d.followUpAction + ' (due ' + d.followUpDue + ')'],\n    ['Email', d.email || '—'], ['Phone', d.phone || '—'], ['Property type', d.propertyType || '—'],\n    ['Budget', money], ['Preferred location', d.location || '—'], ['Buying timeline', d.timeline || '—'],\n    ['Message', d.message || '—'],\n  ];\n  if (d.reviewReasons.length) rows.push(['Review flags', d.reviewReasons.join('; ')]);\n  const table = rows.map((x) => '<tr><td style=\"padding:6px 12px;background:#f5f5f5\"><b>' + esc(x[0]) + '</b></td><td style=\"padding:6px 12px\">' + esc(x[1]) + '</td></tr>').join('');\n  const emailHtml =\n    '<div style=\"font-family:Arial,sans-serif;max-width:620px\">' +\n    '<h2>' + (isDuplicate ? 'Repeat enquiry (existing lead updated)' : 'New lead') + '</h2>' +\n    '<table style=\"border-collapse:collapse;width:100%\">' + table + '</table>' +\n    '<p><a href=\"' + esc(leadUrl) + '\" style=\"display:inline-block;padding:10px 18px;background:#0073ea;color:#fff;text-decoration:none;border-radius:4px\">Open lead in monday.com</a></p>' +\n    '<p style=\"color:#777;font-size:12px\">Sent by the Real Estate Lead Response Agent. No message has been sent to the buyer.</p></div>';\n  const emailSubject = '[' + d.priority.toUpperCase() + '] ' + (isDuplicate ? 'Repeat enquiry' : 'New lead') + ': ' + d.fullName;\n\n  return [{ json: { itemId, isDuplicate, leadUrl, logBody, taskBody, emailHtml, emailSubject } }];"
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "5c13d22a-caf3-4916-9622-b78e1cb09c37",
+      "name": "Log Enquiry Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.monday.com/v2",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.logBody }}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "monday.com API Token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "a23d7b78-10da-47b2-9815-5f275b12cd64",
+      "name": "Create Follow-up Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.monday.com/v2",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('Resolve Lead ID').first().json.taskBody }}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "monday.com API Token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "338d64cb-37ca-45c9-b86a-668307eed658",
+      "name": "Verify Follow-up",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        200
+      ],
+      "parameters": {
+        "jsCode": "  const bad = (x) => !x || x.error_message || (x.errors && x.errors.length) || !x.data;\n  const logRes = $('Log Enquiry Update').first().json;\n  const taskRes = $input.first().json;\n  if (bad(logRes)) throw new Error('monday.com update note failed: ' + JSON.stringify(logRes).slice(0, 400));\n  if (bad(taskRes)) throw new Error('monday.com follow-up task failed: ' + JSON.stringify(taskRes).slice(0, 400));\n  return [{ json: { taskItemId: taskRes.data.create_item.id } }];"
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "134716c9-fdfd-45e9-9fe3-a71e4b821f5c",
+      "name": "Email Sales Rep",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2860,
+        200
+      ],
+      "parameters": {
+        "sendTo": "={{ $('Config').first().json.salesRepEmail }}",
+        "subject": "={{ $('Resolve Lead ID').first().json.emailSubject }}",
+        "message": "={{ $('Resolve Lead ID').first().json.emailHtml }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_ME",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "3cc74bf8-f514-4174-93ec-55220ecf4adf",
+      "name": "Build Reject Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        520
+      ],
+      "parameters": {
+        "jsCode": "  const l = $input.first().json;\n  if (!l.authOk) return []; // bad secret: ignore silently, do not spam the admin\n  const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n  const subject = '[REJECTED ENQUIRY] ' + l.rejectReason + ' - ' + l.fullName;\n  const html =\n    '<div style=\"font-family:Arial,sans-serif;max-width:620px\"><h2>Enquiry rejected by automation</h2>' +\n    '<p><b>Reason:</b> ' + esc(l.rejectReason) + '</p>' +\n    '<p>Nothing was written to monday.com. If the buyer can be reached some other way, add them manually.</p>' +\n    '<pre style=\"background:#f5f5f5;padding:12px;white-space:pre-wrap\">' + esc(JSON.stringify(l.raw, null, 2)) + '</pre></div>';\n  return [{ json: { subject, html } }];"
+      }
+    },
+    {
+      "id": "08961ca8-1c69-4273-8592-600683d498f6",
+      "name": "Notify Admin: Rejected",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1100,
+        520
+      ],
+      "parameters": {
+        "sendTo": "={{ $('Config').first().json.adminEmail }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_ME",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "bf862d0f-8882-42a4-9b68-42aa1543a19c",
+      "name": "Build Failure Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        520
+      ],
+      "parameters": {
+        "jsCode": "  const cfg = $('Config').first().json;\n  const first = $input.first().json;\n  const e = first.error || first;\n  const msg = typeof e === 'string' ? e : (e.message || e.description || JSON.stringify(e).slice(0, 500));\n  const step = (e && e.node && e.node.name) || (e && e.context && e.context.nodeName) || 'see the failed execution';\n  let lead = {};\n  for (const name of ['Parse Lookup', 'Classify Lead', 'Normalize & Validate']) {\n    try { lead = $(name).first().json; break; } catch (err) { /* node not executed */ }\n  }\n  const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n  const rows = [\n    ['Name', lead.fullName], ['Email', lead.email || lead.rawEmail], ['Phone', lead.phone || lead.rawPhone],\n    ['Property type', lead.propertyType], ['Budget', lead.budgetRaw], ['Location', lead.location],\n    ['Timeline', lead.timeline], ['Message', lead.message], ['Priority', lead.priority],\n  ].map((x) => '<tr><td style=\"padding:4px 10px;background:#f5f5f5\"><b>' + x[0] + '</b></td><td style=\"padding:4px 10px\">' + esc(x[1] || '—') + '</td></tr>').join('');\n  const html =\n    '<div style=\"font-family:Arial,sans-serif;max-width:640px\"><h2 style=\"color:#c62828\">Lead automation failed</h2>' +\n    '<p><b>Step:</b> ' + esc(step) + '<br><b>Error:</b> ' + esc(msg) + '<br><b>n8n execution ID:</b> ' + esc($execution.id) + '</p>' +\n    '<h3>Enquiry</h3><table style=\"border-collapse:collapse\">' + rows + '</table>' +\n    '<h3>Process it manually</h3><ol>' +\n    '<li>Search the leads board in monday.com for the buyer\\'s email or phone.</li>' +\n    '<li>If it exists, update the fields above and set the priority. If not, create the item with stage \"New\".</li>' +\n    '<li>Add a follow-up task on the tasks board using the priority rules (Urgent: call within 1 hour; High: 24 hours; Nurture: 3 days; Needs review: verify details).</li>' +\n    '<li>Contact the buyer yourself. The automation never emails buyers.</li></ol>' +\n    '<h3>Retry safely</h3><p>Open n8n, then Executions, open execution ' + esc($execution.id) + ' and use Retry. The duplicate check means a retry updates the existing lead instead of creating a second one. ' +\n    'Exception: if the step above is \"Email Sales Rep\", the lead and task already exist, so do not retry. Just tell the sales rep yourself.</p></div>';\n  return [{ json: { subject: '[FAILED] Lead automation error at: ' + step, html } }];"
+      }
+    },
+    {
+      "id": "a994575c-3de7-4a0f-9831-d5bf154b7693",
+      "name": "Alert Admin: Failure",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2420,
+        520
+      ],
+      "parameters": {
+        "sendTo": "={{ $('Config').first().json.adminEmail }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_ME",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "b5c1c8db-5f18-4d5b-935c-a6573aed5f65",
+      "name": "Note: Setup",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -380
+      ],
+      "parameters": {
+        "content": "## Real Estate Lead Response Agent\n**Flow:** Google Form → Apps Script → this webhook → validate → classify → duplicate check → create/update monday.com → note + follow-up task → email sales rep. Failures email the admin with manual steps.\n\n**Setup**\n1. Create credential **Header Auth** named `monday.com API Token`: Name = `Authorization`, Value = your monday API token. Select it on the 5 monday HTTP nodes.\n2. Connect **Gmail OAuth2** on the 3 Gmail nodes.\n3. Open the **Config** node and replace every `REPLACE_...` value (board, group and column IDs, emails, secret).\n4. Leads board columns: Email (Email), Phone (Text), Property Type (Text), Budget (Numbers), Preferred Location (Text), Buying Timeline (Text), Message (Long text), Stage (Status), Priority (Status), Follow-up Due (Date).\n5. Tasks board columns: Due date (Date), Notes (Text).\n6. Activate the workflow, paste the **Production** webhook URL into the Apps Script.\n\nStatus labels are created automatically if missing. The workflow never emails buyers.",
+        "width": 760,
+        "height": 520,
+        "color": 4
+      }
+    },
+    {
+      "id": "5dc5ebff-c6ce-4142-a1b8-63f613fd7658",
+      "name": "Note: Classification rules",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -380
+      ],
+      "parameters": {
+        "content": "**Priority rules (no AI)**\n- Urgent: timeline ≤ 7 days\n- High priority: ≤ 30 days\n- Nurture: > 30 days or undecided\n- Needs review: any missing/invalid field, unreadable budget/timeline, or contradiction\n\nA lead with one valid contact method is kept and flagged. A lead with neither is rejected and the admin is emailed.",
+        "width": 560,
+        "height": 300,
+        "color": 6
+      }
+    },
+    {
+      "id": "62ac1e38-7b06-42f4-b0ff-e00c201b2e6e",
+      "name": "Note: Failures",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        640
+      ],
+      "parameters": {
+        "content": "Every monday.com and Gmail step has an error output that lands here. The admin email names the failed step, shows the enquiry, lists manual steps and explains a safe retry. Duplicate check makes retries safe.",
+        "width": 640,
+        "height": 220,
+        "color": 3
+      }
+    }
+  ],
+  "connections": {
+    "Google Form Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Normalize & Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize & Validate": {
+      "main": [
+        [
+          {
+            "node": "Is Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Valid?": {
+      "main": [
+        [
+          {
+            "node": "Classify Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Reject Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Reject Report": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin: Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Lead": {
+      "main": [
+        [
+          {
+            "node": "Find Existing Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Existing Lead": {
+      "main": [
+        [
+          {
+            "node": "Parse Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Lookup": {
+      "main": [
+        [
+          {
+            "node": "Lead Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Exists?": {
+      "main": [
+        [
+          {
+            "node": "Update Existing Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create New Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Existing Lead": {
+      "main": [
+        [
+          {
+            "node": "Resolve Lead ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create New Lead": {
+      "main": [
+        [
+          {
+            "node": "Resolve Lead ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Lead ID": {
+      "main": [
+        [
+          {
+            "node": "Log Enquiry Update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Enquiry Update": {
+      "main": [
+        [
+          {
+            "node": "Create Follow-up Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Follow-up Task": {
+      "main": [
+        [
+          {
+            "node": "Verify Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Follow-up": {
+      "main": [
+        [
+          {
+            "node": "Email Sales Rep",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Sales Rep": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Build Failure Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Failure Report": {
+      "main": [
+        [
+          {
+            "node": "Alert Admin: Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Karachi"
+  },
+  "tags": []
+}

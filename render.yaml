@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: techtox-lead-response-agent
+    name: real-estate-lead-response-agent
     runtime: python
-    plan: starter
+    plan: starter            # persistent disks are not available on the free plan
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
@@ -13,9 +13,16 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.8
+      - key: ENVIRONMENT
+        value: production
       - key: DATABASE_URL
         value: sqlite:////opt/render/project/src/data/leads.db
       - key: WEBHOOK_SECRET
         generateValue: true
+      - key: API_KEY
+        generateValue: true
       - key: TIMEZONE
         value: Asia/Karachi
+      - key: DEFAULT_COUNTRY_CODE
+        value: "+92"
+      # Add the monday.com / SMTP / Slack variables from .env.example in the Render dashboard.

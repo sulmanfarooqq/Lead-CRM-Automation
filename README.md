@@ -1,260 +1,258 @@
-# Techtox Lead & CRM Automation — Python Lead Management System
+# Real Estate Lead Response Agent — Lead & CRM Automation (Python/FastAPI + n8n + monday.com)
 
-**Techtox Lead & CRM Automation** is a Python and FastAPI project that helps real-estate teams capture website inquiries, validate lead data, detect duplicate leads, qualify sales opportunities, assign leads to representatives, and create follow-up tasks. It is a self-hostable **lead management automation** backend built by **Techtox**, an automation agency focused on practical business systems.
+[![CI](https://github.com/sulmanfarooqq/Lead-CRM-Automation/actions/workflows/ci.yml/badge.svg)](https://github.com/sulmanfarooqq/Lead-CRM-Automation/actions/workflows/ci.yml)
+![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
+![License MIT](https://img.shields.io/badge/license-MIT-green)
 
-Use this project as a starting point for a **real estate CRM automation**, **lead capture webhook**, or **sales lead routing system**. It includes JSON configuration, SQLite persistence, optional Monday.com CRM sync, Slack and email team notifications, Docker support, and a Render deployment blueprint.
+**Real estate lead automation that captures every website or Google Form enquiry, validates and qualifies it, removes duplicates, routes it to a sales rep, creates the follow-up task in monday.com, and emails the team, with no buyer ever contacted automatically.**
 
-> **Project status:** Demonstration foundation, not a fully managed production CRM. Configure and test all integrations with client-owned accounts before production. This version does not send messages to buyers.
+This repository ships the **same system in two forms** so you can pick the one that fits the client:
 
-## Techtox agency project
+| | Python / FastAPI service | n8n workflow |
+|---|---|---|
+| Where | [`app/`](app) | [`n8n/real-estate-lead-response-agent.json`](n8n/real-estate-lead-response-agent.json) |
+| Best for | Self-hosting, custom code, an API with its own database and tests | No-code teams already running n8n |
+| Lead intake | `POST /webhooks/leads` | n8n webhook `real-estate-lead` |
+| CRM | monday.com (find → create/update → note → task) | same |
+| Team alerts | SMTP email, Slack | Gmail |
+| Extras | SQLite history, round-robin reps, REST API, resync | simple visual flow |
 
-This repository is part of the **Techtox AI Automation** portfolio. Techtox builds business automation systems that reduce repetitive operational work and help teams respond to enquiries consistently. This project demonstrates one specific service: **lead capture, CRM updates, lead qualification, sales assignment, and follow-up task automation**.
+The qualification and validation logic is **proven identical**: the test suite runs the real JavaScript from the n8n workflow's Code nodes and checks that the Python code gives the same answer on 44 test enquiries. See [docs/PARITY.md](docs/PARITY.md) for the exact comparison and the few intentional differences.
 
-- Agency: **Techtox**
-- Service: Lead & CRM Automation
-- Primary use case: Real-estate lead management and sales follow-up
-- Built with: Python, FastAPI, SQLite, JSON, Monday.com API, Slack webhooks
-- Repository: [Techtox Lead & CRM Automation on GitHub](https://github.com/sulmanfarooqq/Lead-CRM-Automation)
+> **Safety by design:** the system only messages your **team**. It never emails, texts or calls a buyer.
 
-## Demo video
+## Contents
 
-After recording the walkthrough, upload it to YouTube and replace this placeholder:
+- [How it works](#how-it-works)
+- [Features](#features)
+- [Quick start (Python)](#quick-start-python)
+- [Send a test lead](#send-a-test-lead)
+- [Priority rules](#priority-rules)
+- [Connect Google Forms](#connect-google-forms)
+- [Connect monday.com](#connect-mondaycom)
+- [Email and Slack notifications](#email-and-slack-notifications)
+- [API reference](#api-reference)
+- [Configuration](#configuration)
+- [Deploy](#deploy)
+- [Use the n8n workflow instead](#use-the-n8n-workflow-instead)
+- [Tests](#tests)
+- [Project layout](#project-layout)
+- [Limitations](#limitations)
+- [Documentation](#documentation)
 
-**[Watch the Techtox Lead & CRM Automation demo](ADD_YOUR_VIDEO_URL_HERE)**
-
-Suggested walkthrough: submit a lead → validate and qualify it → submit a duplicate → show sales representative assignment and follow-up task → show CRM/team notification → test an invalid webhook secret.
-
-## What this lead automation system does
-
-1. **Captures leads:** receives inquiries from a website, form, or another system through a secure webhook.
-2. **Validates lead data:** checks required fields, validates email format, and normalizes phone numbers.
-3. **Detects duplicates:** checks existing local records by email or normalized phone number.
-4. **Qualifies sales leads:** classifies inquiries using the configured budget and buying timeline rules.
-5. **Routes leads to sales reps:** assigns new leads with configurable round-robin distribution.
-6. **Creates follow-up tasks:** stores the next action and due time for the sales team.
-7. **Connects business tools:** optionally creates Monday.com items and sends internal Slack or SMTP notifications.
-
-## Key features
-
-- Python lead management API built with FastAPI.
-- Secure inbound lead capture webhook using a shared secret.
-- Pydantic request validation and email validation.
-- Phone normalization, including Pakistan country-code handling.
-- Budget parsing for thousand, lakh, and crore formats.
-- Lead qualification: Urgent, High priority, Nurture, and Needs review.
-- Duplicate lead detection by email or normalized phone.
-- Configurable round-robin lead distribution.
-- SQLite storage for leads, events, and follow-up tasks.
-- Optional Monday.com CRM integration.
-- Optional Slack alerts and internal email notifications.
-- REST API endpoints for leads, follow-ups, health, and statistics.
-- JSON-based lead fields and sales routing rules.
-- Docker, Render, and Railway deployment guidance.
-
-## Workflow architecture
+## How it works
 
 ```text
-Website / Lead Form / External System
-                 |
-                 v
-          POST /webhooks/leads
-                 |
-                 v
-       Shared Secret + Validation
-                 |
-                 v
-         Duplicate Lead Check
-                 |
-                 v
-        Lead Qualification Rules
-                 |
-                 v
-        Round-Robin Lead Routing
-                 |
-                 v
-          SQLite Lead Storage
-              /       \
-             v         v
-      Monday.com    Follow-up Task
-             \         /
-              v       v
-        Internal Team Notifications
-             Slack / SMTP
+Google Form ──► Apps Script ──► POST /webhooks/leads        (or the n8n webhook)
+Website form ─────────────────►        │
+                                       ▼
+                       check webhook secret ──✗──► 401, nothing stored
+                                       │
+                       validate + normalise (name, email, E.164 phone, budget)
+                                       │
+              no valid email AND no valid phone? ──► reject, alert admin
+                                       │
+                 duplicate? (email, then phone) ──► update existing lead
+                                       │
+                 classify: Urgent / High priority / Nurture / Needs review
+                                       │
+                 assign sales rep (round-robin) and save lead + follow-up task
+                                       │  (answers the caller here)
+                       ┌───────────────┴────────────────┐
+                       ▼                                ▼
+        monday.com: find → create/update      email / Slack the sales rep
+        → activity note → follow-up task      (never the buyer)
+                       │
+        any failure ──► admin alert with manual steps; POST /api/leads/{id}/resync retries safely
 ```
 
-## Technology stack
+## Features
 
-| Technology | Purpose |
-|---|---|
-| Python 3.11+ | Backend programming language |
-| FastAPI | Webhook and REST API framework |
-| Pydantic | Request validation |
-| SQLite | Local lead and task persistence |
-| JSON | Lead fields and routing configuration |
-| Monday.com GraphQL API | Optional CRM item creation |
-| Slack Webhooks | Optional team notifications |
-| SMTP | Optional internal email notifications |
-| Docker | Containerized deployment |
-| Render / Railway | Hosting options |
+- **Lead capture webhook** with constant-time shared-secret authentication (header or JSON body).
+- **Validation that keeps leads:** a lead is rejected only when it has *no* valid email *and* no valid phone. Any other gap becomes a flag and the lead goes to **Needs review**.
+- **Phone normalisation to E.164** (`0300 1234567`, `+92 300…`, `0092…`, `92300…` all become `+923001234567`; default country code configurable).
+- **Budget parser** for `750k`, `50 lakh`, `1.5 crore`, `2 million`, `$1.2m`, `1,50,00,000`.
+- **Priority classification** (Urgent, High priority, Nurture, Needs review) including contradiction detection, for example a "6 months" timeline with an "urgent" message.
+- **Duplicate detection** by email, then phone, locally **and** in monday.com. A repeat enquiry updates the existing lead, keeps its owner and stage, and never erases details it did not repeat.
+- **Round-robin routing** across active sales reps, safe under concurrent requests.
+- **monday.com sync** with 3 retries, an activity note, and a follow-up task on a tasks board. Retries never create a second item.
+- **Failure handling:** every CRM or notification failure is recorded on the lead and emailed to the admin with manual steps; `POST /api/leads/{id}/resync` retries.
+- **Protected management API** (`X-API-Key`) for leads, due follow-ups, completing tasks, and statistics.
+- **Production safeguards:** the app refuses to start in production with a missing or weak secret, caps request size, escapes all HTML in emails and CRM notes, and never logs tokens.
+- **Docker, Render and Railway** ready, with GitHub Actions CI.
 
-## Run Techtox Lead & CRM Automation locally
+## Quick start (Python)
 
-### Requirements
-
-- Python 3.11 or newer
-- pip
-- Git
-
-### 1. Clone the repository
+Requires Python 3.11+.
 
 ```bash
 git clone https://github.com/sulmanfarooqq/Lead-CRM-Automation.git
 cd Lead-CRM-Automation
-```
-
-### 2. Create and activate a virtual environment
-
-```bash
 python -m venv .venv
-```
-
-Windows PowerShell:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-macOS / Linux:
-
-```bash
-source .venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```bash
+source .venv/bin/activate            # Windows PowerShell: .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+cp .env.example .env                 # Windows PowerShell: Copy-Item .env.example .env
 ```
 
-### 4. Configure environment variables
+Generate two secrets and put them in `.env` as `WEBHOOK_SECRET` and `API_KEY`:
 
-Copy `.env.example` to `.env` (PowerShell: `Copy-Item .env.example .env`). Set a unique `WEBHOOK_SECRET`. Edit `config/routing_rules.json` and replace the sample sales representatives with the client's actual team members.
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
 
-### 5. Start the API
+Replace the sample sales reps in [`config/routing_rules.json`](config/routing_rules.json) with your real team, then start the server:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Open the interactive API documentation at http://127.0.0.1:8000/docs.
+Open <http://127.0.0.1:8000/docs> for the interactive API documentation. The app works with no CRM and no email configured, so you can try it immediately; leads are still stored and visible through the API.
 
-## Test the lead capture webhook
-
-Set the `secret` in `examples/sample_lead.json` to match `WEBHOOK_SECRET`, then send a test inquiry:
+## Send a test lead
 
 ```bash
-curl -X POST http://127.0.0.1:8000/webhooks/leads -H "Content-Type: application/json" -d @examples/sample_lead.json
+curl -X POST http://127.0.0.1:8000/webhooks/leads \
+  -H "Content-Type: application/json" \
+  -H "X-Webhook-Secret: YOUR_WEBHOOK_SECRET" \
+  -d @examples/sample_lead.json
 ```
 
-For production, remove the JSON secret from the payload and send it in the `X-Webhook-Secret` request header.
+```json
+{
+  "lead_id": 1,
+  "status": "created",
+  "priority": "Urgent",
+  "assigned_to": "Sales Representative 1",
+  "follow_up_due": "2026-11-02T17:43:36+05:00",
+  "follow_up_action": "Call the buyer within 1 hour, then confirm by email",
+  "is_duplicate": false,
+  "crm_status": "not_configured",
+  "message": "Lead stored. Team notifications are being sent; the buyer was not contacted.",
+  "warnings": []
+}
+```
 
-## API endpoints
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/` | Service information |
-| GET | `/health` | Hosting health check |
-| POST | `/webhooks/leads` | Capture and process a new lead |
-| GET | `/api/leads` | List stored leads |
-| GET | `/api/leads/{id}` | Retrieve one lead |
-| GET | `/api/follow-ups/due` | List due follow-up tasks |
-| GET | `/api/stats` | Lead statistics |
-
-## Configure lead fields and sales routing with JSON
-
-- `config/lead_fields.json`: field definitions used by the lead intake workflow.
-- `config/routing_rules.json`: sample sales representatives, round-robin assignment, qualification thresholds, and follow-up timing.
-- `examples/sample_lead.json`: example real-estate lead webhook payload.
-
-Default qualification rules:
-
-| Classification | Example condition | Suggested next action |
-|---|---|---|
-| Urgent | Buying within 7 days | Call within 1 hour |
-| High priority | Buying within 8–30 days | Call within 24 hours |
-| Nurture | Buying after 30 days or undecided | Follow up within 3 days |
-| Needs review | Missing or unreadable budget/timeline | Verify within 1 day |
-
-Incomplete leads are retained for review. At least one valid email address or phone number is required.
-
-## Monday.com CRM integration
-
-Create a dedicated Leads board with columns for Email, Phone, Property Type, Budget, Preferred Location, Buying Timeline, Message, Stage, Priority, and Follow-up Due. Add the client's API token, board/group IDs, and exact column IDs to the hosting environment variables. Test the integration on a dedicated board before connecting live client data.
-
-**Current limitation:** the adapter creates a Monday.com item on each webhook call. Duplicate detection updates the local SQLite record, but remote Monday.com duplicate lookup/update is not implemented. Repeated webhook submissions may therefore create repeated Monday.com items. Do not present cross-system deduplication as complete.
-
-## Internal notifications
-
-Techtox Lead & CRM Automation can optionally notify the assigned representative or internal team through:
-
-- SMTP email notifications.
-- Slack incoming webhook notifications.
-
-These are internal team notifications. This version does **not** send buyer-facing email, SMS, or WhatsApp messages. Customer-facing communication requires client approval, consent review, and approved message templates.
-
-## Deployment
-
-### Render
-
-Create a Blueprint from this repository, review `render.yaml`, deploy, configure environment secrets, and test `/health` and the lead webhook. SQLite requires persistent storage. Confirm that the selected hosting plan supports a persistent disk or use managed PostgreSQL. Ephemeral storage can lose data during redeployment.
-
-### Railway
-
-Deploy from GitHub, set the start command to:
+Send the same command again and you get `"status": "updated"` and `"is_duplicate": true`. Try [`examples/sample_lead_needs_review.json`](examples/sample_lead_needs_review.json) to see flags and **Needs review** in action, and [`examples/sample_lead_google_form.json`](examples/sample_lead_google_form.json) for the field names the Google Form bridge sends. View stored leads:
 
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port $PORT
+curl http://127.0.0.1:8000/api/leads -H "X-API-Key: YOUR_API_KEY"
 ```
 
-Attach a persistent volume and configure `DATABASE_URL` to use the mounted absolute SQLite path (for example, `sqlite:////app/data/leads.db`).
+## Priority rules
 
-### Docker
+No AI is involved, so results are predictable and auditable. Thresholds and follow-up times live in [`config/routing_rules.json`](config/routing_rules.json).
+
+| Priority | When | Follow-up action | Due |
+|---|---|---|---|
+| **Urgent** | Timeline ≤ 7 days, or *asap / today / tomorrow / this week* | Call the buyer within 1 hour, then confirm by email | 1 hour |
+| **High priority** | 8–30 days | Call within 24 hours and propose viewing slots | 24 hours |
+| **Nurture** | More than 30 days, or *undecided / just looking / exploring* | Send property information within 3 days | 3 days |
+| **Needs review** | Anything missing, unreadable or contradictory | Verify the details, then re-classify | 1 day |
+
+A timeline range such as `1-2 weeks` uses its upper bound. **Needs review** triggers on: missing name, email, phone, budget or timeline; an invalid email or phone; an unreadable budget or timeline; a long or undecided timeline with an urgent-sounding message; an urgent timeline with a "just browsing" message.
+
+## Connect Google Forms
+
+[`integrations/google-apps-script/Code.gs`](integrations/google-apps-script/Code.gs) sends each form response to the webhook, and works with both the Python service and the n8n workflow. The secret is kept in Apps Script *Script Properties*, never in the code. Step-by-step instructions: [docs/GOOGLE_FORM_SETUP.md](docs/GOOGLE_FORM_SETUP.md).
+
+## Connect monday.com
+
+1. Create a **Leads** board with columns Email, Phone, Property Type, Budget (**Numbers**), Preferred Location, Buying Timeline, Message (Long text), Stage (Status), Priority (Status), Follow-up Due (Date).
+2. Optionally create a **Follow-up Tasks** board with a Date column and a Text column.
+3. Put your API token, board ID and the *column IDs* in `.env`.
+
+Full walkthrough, including how to find column IDs: [docs/MONDAY_SETUP.md](docs/MONDAY_SETUP.md). Leave `MONDAY_API_TOKEN` empty to run without a CRM.
+
+## Email and Slack notifications
+
+Set `SMTP_*` (plus `SALES_REP_EMAIL` and `ADMIN_EMAIL`) for email and `SLACK_WEBHOOK_URL` for Slack. Each new or repeat lead emails the assigned rep an HTML summary with a link to the lead in monday.com. Rejected enquiries and failures go to `ADMIN_EMAIL`. Port `587` uses STARTTLS and `465` uses implicit SSL. With nothing configured the app still works and logs a warning.
+
+## API reference
+
+| Method | Endpoint | Auth | Purpose |
+|---|---|---|---|
+| `GET` | `/` | none | Service information |
+| `GET` | `/health` | none | Health check (verifies the database; `503` when it is down) |
+| `POST` | `/webhooks/leads` | `X-Webhook-Secret` | Capture and process a lead |
+| `GET` | `/api/leads` | `X-API-Key` | List leads. Filters: `limit`, `priority`, `crm_status` |
+| `GET` | `/api/leads/{id}` | `X-API-Key` | One lead with its original payload |
+| `POST` | `/api/leads/{id}/resync` | `X-API-Key` | Retry the monday.com sync safely |
+| `GET` | `/api/follow-ups/due` | `X-API-Key` | Open follow-up tasks that are due |
+| `POST` | `/api/follow-ups/{id}/complete` | `X-API-Key` | Mark a task done |
+| `GET` | `/api/stats` | `X-API-Key` | Counts by priority and CRM status |
+
+Webhook responses: `200` stored, `401` wrong secret, `413` body too large, `422` no valid email or phone (or invalid field types).
+
+## Configuration
+
+Every setting is an environment variable; [`.env.example`](.env.example) documents them all. The important ones:
+
+| Variable | Purpose |
+|---|---|
+| `ENVIRONMENT` | Set to `production` to enforce strong secrets at startup |
+| `WEBHOOK_SECRET`, `API_KEY` | Authentication (16+ random characters in production) |
+| `DATABASE_URL` | SQLite path, for example `sqlite:///./data/leads.db` |
+| `DEFAULT_COUNTRY_CODE`, `TIMEZONE` | Phone normalisation and due-time calculation |
+| `MONDAY_*` | CRM connection and column IDs |
+| `SMTP_*`, `SALES_REP_EMAIL`, `ADMIN_EMAIL`, `SLACK_WEBHOOK_URL` | Notifications |
+
+## Deploy
+
+**Render:** create a Blueprint from this repo. [`render.yaml`](render.yaml) sets production mode, generates both secrets and mounts a disk for SQLite (disks need a paid plan). **Railway:** deploy from GitHub, attach a volume, set `DATABASE_URL=sqlite:////app/data/leads.db`. **Docker:**
 
 ```bash
-docker build -t techtox-lead-automation .
-docker run --env-file .env -p 8000:8000 -v lead-data:/app/data techtox-lead-automation
+docker build -t lead-response-agent .
+docker run --env-file .env -p 8000:8000 -v lead-data:/app/data lead-response-agent
 ```
 
-## Run tests
+Details, backups and scaling notes: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Run **one** instance; SQLite is not meant for several replicas.
+
+## Use the n8n workflow instead
+
+Import [`n8n/real-estate-lead-response-agent.json`](n8n/real-estate-lead-response-agent.json) into n8n, add a Header Auth credential for monday.com and a Gmail OAuth2 credential, fill in the **Config** node, and activate. Setup and node-by-node description: [docs/N8N_WORKFLOW.md](docs/N8N_WORKFLOW.md).
+
+## Tests
 
 ```bash
-pytest -q
+pip install -r requirements-dev.txt
+pytest
+node tests/parity/apps_script_check.js      # Google Apps Script bridge
 ```
 
-## Production readiness checklist
+The parity tests need Node.js 18+; they are skipped automatically when Node is absent. The monday.com tests run against an in-memory fake, so the suite needs no network and no credentials.
 
-- Use and rotate a strong webhook secret; never commit credentials.
-- Enforce HTTPS, rate limiting, and request-size limits.
-- Protect lead-reading API endpoints with authentication before public exposure.
-- Configure persistent storage, backups, and restore tests.
-- Test duplicate submissions, malformed payloads, and integration outages.
-- Review client privacy, data retention, and access requirements.
-- Move to PostgreSQL and distributed-safe assignment before running multiple application replicas.
+## Project layout
 
-## Known limitations
+```text
+app/                         FastAPI service
+  main.py                    routes and startup checks
+  services.py                normalise, classify, route, store (port of the n8n Code nodes)
+  monday.py                  monday.com GraphQL client with retries
+  notifications.py           email, Slack and admin alerts
+  pipeline.py                background CRM sync + notifications, failure handling
+  security.py  config.py  database.py  schemas.py
+config/routing_rules.json    sales reps, thresholds, follow-up actions
+n8n/                         importable n8n workflow
+integrations/google-apps-script/Code.gs
+examples/                    sample webhook payloads
+tests/                       pytest suite + n8n parity runner
+docs/                        setup, parity, deployment, handover, SEO
+```
 
-This is a single-instance demonstration foundation, not an enterprise CRM. SQLite is suitable for low-volume, single-instance use. The due-follow-up endpoint lists tasks, but no background scheduler runs automatically. Buyer calls, emails, SMS, and WhatsApp messages are not implemented. Monday.com integration is create-only. These are future enhancements, not current features.
+## Limitations
 
-## SEO and discoverability
+Stated plainly so nobody oversells this system:
 
-See [`docs/SEO.md`](docs/SEO.md) for the Techtox GitHub repository description, recommended GitHub topics, target search phrases, website title and meta description, service-page structure, and technical SEO checklist.
+- **Not yet verified against a live monday.com account.** The GraphQL queries match monday's documented API and are covered by tests against a fake, but you must run one real lead through your own board (see [docs/MONDAY_SETUP.md](docs/MONDAY_SETUP.md#verify-with-a-real-lead)) before going live.
+- **SQLite, single instance.** No multi-replica deployment.
+- **No background scheduler.** Due follow-ups are listed by the API; nothing pings the rep when a task becomes overdue.
+- **No buyer-facing messages** (email, SMS, WhatsApp) by design.
+- **monday.com sync is "at least once".** If the app crashes between the CRM call and saving its result, a resync could create one extra item. The window is tiny and the admin alert explains how to clean it up.
 
-## About Techtox
+## Documentation
 
-**Techtox** is an AI automation agency focused on building useful business systems rather than unnecessary software. The Techtox automation service portfolio includes lead capture and CRM automation, appointment and follow-up workflows, and AI-assisted customer support. This GitHub repository documents the technical foundation of the **Techtox Lead & CRM Automation** service.
+[Google Form setup](docs/GOOGLE_FORM_SETUP.md) · [monday.com setup](docs/MONDAY_SETUP.md) · [n8n workflow](docs/N8N_WORKFLOW.md) · [Python vs n8n parity](docs/PARITY.md) · [Workflow specification](docs/WORKFLOW.md) · [Deployment](docs/DEPLOYMENT.md) · [Client handover](docs/CLIENT_HANDOVER.md) · [Demo script](docs/VIDEO_DEMO_SCRIPT.md) · [SEO plan](docs/SEO.md)
 
-For business enquiries or a discussion about adapting this workflow, visit the Techtox website or contact the Techtox team through its official business channels.
+## License
 
----
-
-**Built by Techtox — Lead capture, CRM workflow automation, and sales follow-up systems.**
+[MIT](LICENSE). Built by **Techtox**, an automation agency focused on practical business systems.

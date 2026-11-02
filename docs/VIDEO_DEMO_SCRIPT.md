@@ -1,15 +1,15 @@
-# Demo recording outline
+# Demo recording outline (3–5 minutes)
 
-Target length: 3–5 minutes.
+Record with a test board and fake data. Never show real customer details, API tokens, webhook secrets or private account pages.
 
-1. Introduce the problem: inquiries can be delayed, lost or manually copied into a CRM.
-2. Open the API docs and show the sample JSON payload.
-3. Submit a new sample lead.
-4. Explain validation, phone normalization, qualification and sales assignment.
-5. Show the saved record and follow-up task through the API.
-6. Submit the same email again and demonstrate local duplicate detection.
-7. Show Monday.com and team notifications if integrations are configured.
-8. Show the health endpoint and explain Render/Railway deployment.
-9. Explain that lead fields, routing rules and integrations can be configured for a client.
+1. **Problem (20 s).** Enquiries arrive late, get copied into a CRM by hand, and nobody knows who should call first.
+2. **Submit the form (30 s).** Fill the Google Form as "Ahmed Khan", `0300 1234567`, `PKR 1.5 crore`, `within 7 days`.
+3. **Show the result (60 s).** monday.com: the new item with a normalised phone and numeric budget, priority **Urgent**, the follow-up task, and the activity note. Open the sales rep's email.
+4. **Repeat the enquiry (30 s).** Submit the same email again: one lead item, a second note, a new task, stage unchanged.
+5. **Needs review (30 s).** Submit a lead with `negotiable` as the budget, or a 6-month timeline with an "urgent" message, and show the flags.
+6. **Rejection and security (30 s).** A lead with no email or phone is refused and the admin is alerted; a wrong secret returns `401`.
+7. **API and docs (30 s).** `/docs`, `GET /api/leads`, `GET /api/stats`.
+8. **Failure handling (30 s).** Show the `[FAILED]` admin email and `POST /api/leads/{id}/resync`.
+9. **Close (20 s).** Same logic as the n8n workflow (mention the parity tests); deployed on Render or Docker; the system never messages buyers.
 
-Never show real customer data, API tokens, webhook secrets or private account details in the recording.
+After uploading the video, add its link under the first heading of the README.

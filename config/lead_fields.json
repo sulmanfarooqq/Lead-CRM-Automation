@@ -1,15 +1,17 @@
 {
-  "required": ["full_name"],
+  "_note": "Reference only: documents the fields the webhook accepts. The code does not read this file; validation lives in app/services.py (normalize_lead) and mirrors the n8n 'Normalize & Validate' node.",
   "contact_requirement": "at_least_one_valid_email_or_phone",
+  "hard_rejection": "Only a lead with NO valid email AND NO valid phone is rejected. Any other missing or invalid field is flagged and the lead is classified 'Needs review'.",
   "fields": {
-    "full_name": {"type": "string", "label": "Full Name"},
-    "email": {"type": "email", "label": "Email"},
-    "phone": {"type": "phone", "label": "Phone"},
-    "property_type": {"type": "string", "label": "Property Type"},
-    "budget": {"type": "string_or_number", "label": "Budget"},
-    "preferred_location": {"type": "string", "label": "Preferred Location"},
-    "buying_timeline": {"type": "string", "label": "Buying Timeline"},
-    "message": {"type": "string", "label": "Message"},
-    "source": {"type": "string", "label": "Lead Source"}
+    "full_name": {"aliases": ["full_name", "fullName", "Full Name"], "flag_when_missing": "Missing name"},
+    "email": {"aliases": ["email", "Email"], "flag_when_missing": "Missing email", "flag_when_invalid": "Invalid email format"},
+    "phone": {"aliases": ["phone", "Phone"], "normalised_to": "E.164", "flag_when_missing": "Missing phone", "flag_when_invalid": "Invalid phone number"},
+    "property_type": {"aliases": ["property_type", "propertyType", "Property Type"]},
+    "budget": {"aliases": ["budget", "Budget"], "understands": "k, thousand, lakh, lac, crore, cr, m, mil, million, currency symbols", "flag_when_missing": "Missing budget", "flag_when_invalid": "Unreadable budget"},
+    "preferred_location": {"aliases": ["preferred_location", "preferredLocation", "Preferred Location"]},
+    "buying_timeline": {"aliases": ["buying_timeline", "buyingTimeline", "Buying Timeline"], "flag_when_missing": "Missing buying timeline", "flag_when_invalid": "Unrecognised buying timeline"},
+    "message": {"aliases": ["message", "Message"]},
+    "source": {"aliases": ["source", "Source", "Lead Source"], "default": "website"},
+    "submitted_at": {"aliases": ["submitted_at", "submittedAt", "Timestamp"]}
   }
 }

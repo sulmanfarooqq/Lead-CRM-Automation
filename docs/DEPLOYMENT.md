@@ -1,21 +1,43 @@
 # Deployment and operations
 
-## Environment
-Copy .env.example to .env locally. In hosted environments, add variables through the provider dashboard. Never commit credentials or production secrets.
+## Before you deploy
+
+1. Generate two secrets: `python -c "import secrets; print(secrets.token_urlsafe(32))"` for `WEBHOOK_SECRET`, and another for `API_KEY`.
+2. Set `ENVIRONMENT=production`. In this mode the app **refuses to start** if either secret is missing, shorter than 16 characters, or a known placeholder, and the management API answers `503` if `API_KEY` is empty.
+3. Replace the sample reps in `config/routing_rules.json` with real people (the app warns at startup while sample `@example.com` addresses remain).
+4. Never commit `.env` or any token.
 
 ## Render
-Create a Blueprint from render.yaml. The service mounts persistent storage at /opt/render/project/src/data and points DATABASE_URL at the mounted SQLite file. Verify the chosen Render plan supports persistent disks before deploying. Use a long generated WEBHOOK_SECRET and configure Monday.com, SMTP and Slack variables only when those integrations are needed.
+
+Create a **Blueprint** from the repository. `render.yaml` sets production mode, generates both secrets (read them in the Render dashboard → Environment), and mounts a 1 GB disk at `/opt/render/project/src/data` for the SQLite file. Persistent disks require a paid plan; on a free plan the database is wiped on every deploy. Add the `MONDAY_*`, `SMTP_*`, `SLACK_WEBHOOK_URL`, `SALES_REP_EMAIL` and `ADMIN_EMAIL` variables from `.env.example` in the dashboard.
 
 ## Railway
-Deploy from GitHub, use the Procfile command, attach a persistent volume and set DATABASE_URL to an absolute path inside the volume. Confirm the mount path matches the configured database path.
+
+Deploy from GitHub (the `Procfile` provides the start command). Add a volume mounted at `/app/data` and set `DATABASE_URL=sqlite:////app/data/leads.db`, `ENVIRONMENT=production` and the secrets.
+
+## Docker
+
+```bash
+docker build -t lead-response-agent .
+docker run -d --name lead-agent --env-file .env -p 8000:8000 -v lead-data:/app/data lead-response-agent
+```
+
+The container runs as an unprivileged user, stores the database in the `/app/data` volume, and has a built-in health check.
+
+## After deploying
+
+- `GET /health` returns `{"status":"ok"}`.
+- Send one test lead with the secret; confirm it in `GET /api/leads` (with `X-API-Key`).
+- Verify monday.com, email and Slack delivery separately ([MONDAY_SETUP.md](MONDAY_SETUP.md#verify-with-a-real-lead)).
+- Put the service behind HTTPS (Render and Railway do this for you; add a reverse proxy elsewhere).
 
 ## Operations
-- Check GET /health after deployment.
-- Submit one test lead with the correct webhook secret.
-- Check GET /api/leads and GET /api/stats.
-- Verify Monday.com, SMTP and Slack delivery independently.
-- Back up the database and test a restore.
-- Do not run multiple app replicas against a local SQLite file.
 
-## Scaling
-SQLite is for a single low-volume instance. Move to managed PostgreSQL and use a distributed-safe assignment mechanism before scaling horizontally. Protect read endpoints, add rate limiting and request-size limits before exposing the service to real customer data.
+- **Backups:** copy the SQLite file while the service is idle, or use `sqlite3 leads.db ".backup backup.db"`. Test a restore.
+- **Monitoring:** watch `GET /health` and `GET /api/stats` (`by_crm_status.failed` should stay at zero). Failures also reach `ADMIN_EMAIL`.
+- **Stuck CRM sync:** `GET /api/leads?crm_status=failed`, fix the cause, then `POST /api/leads/{id}/resync` for each.
+- **Logs:** set `LOG_LEVEL=DEBUG` temporarily if needed; tokens and passwords are never logged.
+
+## Scaling limits
+
+Run exactly **one** instance. SQLite and the in-process background work are designed for a single low-volume service; the round-robin and duplicate checks are only safe within one process. Moving to several replicas needs PostgreSQL and a shared job queue. Add rate limiting at your proxy or platform if the webhook URL is public.
